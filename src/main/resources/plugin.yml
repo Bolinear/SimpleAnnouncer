@@ -1,0 +1,35 @@
+name: SimpleAnnouncer
+version: "1.0"
+main: com.rmpi.nukkit.spa.SimpleAnnouncer
+api: 1.0.0
+author: RMPI
+description: Simple message broadcaster
+
+commands:
+    tadd:
+        permission: spa
+        description: Adds a message which will be broadcasted
+        usage: /tadd <message>
+    taddi:
+        permission: spa
+        description: Adds a message which will be broadcasted
+        usage: /taddi <index> <message>
+    tdel:
+        permission: spa
+        description: Takes a message out of the broadcast list
+        usage: /tdel | /tdel <index>
+    ton:
+        permission: spa
+        description: Toggles broadcasting on
+        usage: /ton
+    toff:
+        permission: spa
+        description: Toggles broadcasting off
+        usage: /toff
+    tdump:
+        permission: spa
+        description: Dumps the broadcast list
+        usage: /tdump
+permissions:
+    spa:
+        default: op
