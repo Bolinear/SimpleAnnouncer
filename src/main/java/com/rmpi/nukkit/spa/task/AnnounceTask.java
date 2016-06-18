@@ -18,12 +18,14 @@ public class AnnounceTask extends cn.nukkit.scheduler.Task {
 	public void onRun(int currentTick) {
 		if (messages.isEmpty()) return;
 		if (runCounter >= messages.size()) runCounter = 0;
+		
 		try {
 			for (cn.nukkit.Player player : server.getOnlinePlayers().values()) player.sendMessage(messages.get(runCounter));
 		} catch (IndexOutOfBoundsException e) {
 			runCounter = 0;
 			onRun(currentTick);
 		}
+		
 		runCounter++;
 	}
 }

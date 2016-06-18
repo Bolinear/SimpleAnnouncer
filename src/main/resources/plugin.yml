@@ -4,7 +4,6 @@ main: com.rmpi.nukkit.spa.SimpleAnnouncer
 api: 1.0.0
 author: RMPI
 description: Simple message broadcaster
-
 commands:
     tadd:
         permission: spa
