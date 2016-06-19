@@ -7,12 +7,10 @@ import cn.nukkit.utils.Config;
 
 import java.io.File;
 import java.util.LinkedHashMap;
-import java.util.List;
 
 public class SimpleAnnouncer extends cn.nukkit.plugin.PluginBase {
-	public List<String> messages = new java.util.LinkedList<>();
+	public java.util.List<String> messages;
 	public int interval = 10 * 20;
-	private AnnounceTask announceTask = null;
 	private TaskHandler announceHandler = null;
 	public Config settings = null;
 	private TaskHandler saveHandler = null;
@@ -46,9 +44,8 @@ public class SimpleAnnouncer extends cn.nukkit.plugin.PluginBase {
 		}
 		
 		interval = settings.getInt("interval");
-		messages = new java.util.LinkedList<>(settings.getList("messages"));
 		saveHandler = getServer().getScheduler().scheduleRepeatingTask(new com.rmpi.nukkit.spa.task.ConfigSaveTask(this), 10);
-		announceHandler = getServer().getScheduler().scheduleRepeatingTask(announceTask = new AnnounceTask(getServer(), messages), interval);
+		announceHandler = getServer().getScheduler().scheduleRepeatingTask(new AnnounceTask(getServer(), messages = new java.util.LinkedList<>(settings.getList("messages"))), interval);
 	}
 	
 	@Override
@@ -74,7 +71,7 @@ public class SimpleAnnouncer extends cn.nukkit.plugin.PluginBase {
 					return true;
 				}
 				
-				announceTask.messages.add(concat(args));
+				messages.add(concat(args));
 				sender.sendMessage("Successfully added");
 				break;
 			case "taddi":
@@ -92,13 +89,13 @@ public class SimpleAnnouncer extends cn.nukkit.plugin.PluginBase {
 					return true;
 				}
 				
-				if (index_0 >= announceTask.messages.size() || index_0 < 0) {
+				if (index_0 >= messages.size() || index_0 < 0) {
 					sender.sendMessage(command.getUsage());
 					return true;
 				}
 				
 				args[0] = "";
-				announceTask.messages.add(index_0, concat(args));
+				messages.add(index_0, concat(args));
 				sender.sendMessage("Successfully added");
 				break;
 			case "tdel":
@@ -107,7 +104,7 @@ public class SimpleAnnouncer extends cn.nukkit.plugin.PluginBase {
 					return true;
 				}
 				
-				if (announceTask.messages.isEmpty()) {
+				if (messages.isEmpty()) {
 					sender.sendMessage("Nothing in the broadcast list");
 					return true;
 				}
@@ -115,7 +112,7 @@ public class SimpleAnnouncer extends cn.nukkit.plugin.PluginBase {
 				int index_1;
 				
 				if (args.length == 0) {
-					index_1 = announceTask.messages.size() - 1;
+					index_1 = messages.size() - 1;
 				} else /* if (args.length == 1) */ {
 					try {
 						index_1 = Integer.parseInt(args[0]);
@@ -124,17 +121,17 @@ public class SimpleAnnouncer extends cn.nukkit.plugin.PluginBase {
 						return true;
 					}
 					
-					if (index_1 >= announceTask.messages.size() || index_1 < 0) {
+					if (index_1 >= messages.size() || index_1 < 0) {
 						sender.sendMessage(command.getUsage());
 						return true;
 					}
 				}
 				
-				announceTask.messages.remove(index_1);
+				messages.remove(index_1);
 				sender.sendMessage("Successfully deleted");
 				break;
 			case "ton":
-				if (announceHandler.isCancelled()) announceHandler = getServer().getScheduler().scheduleRepeatingTask(announceTask = new AnnounceTask(getServer(), messages), interval);
+				if (announceHandler.isCancelled()) announceHandler = getServer().getScheduler().scheduleRepeatingTask(new AnnounceTask(getServer(), messages), interval);
 				else {
 					sender.sendMessage("Task is already running");
 					return true;
@@ -174,11 +171,11 @@ public class SimpleAnnouncer extends cn.nukkit.plugin.PluginBase {
 	private String dumpTask() {
 		StringBuilder builder = new StringBuilder();
 		
-		for (int i = 0; i < announceTask.messages.size(); i++) {
+		for (int i = 0; i < messages.size(); i++) {
 			builder.append('[');
 			builder.append(i);
 			builder.append("] ");
-			builder.append(announceTask.messages.get(i));
+			builder.append(messages.get(i));
 			builder.append('\n');
 		}
 		
